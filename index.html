@@ -1,25 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Daily Quiz</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Study Quiz | AI Interface</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #08090a;
+            --card-bg: rgba(20, 22, 25, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        nav {
+            width: 280px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: var(--neon-cyan);
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .subject-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            color: #ccc;
+            padding: 12px 20px;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .subject-btn:hover {
+            border-color: var(--neon-cyan);
+            color: white;
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .active {
+            border-color: var(--neon-purple);
+            background: rgba(188, 19, 254, 0.1);
+            color: white;
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .status-bar {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        #subject-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #question-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .action-btn:hover {
+            background: var(--neon-cyan);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        #answer-box {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            display: none;
+            color: #7ee787;
+            font-family: monospace;
+        }
+
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Welcome to the Daily Quiz!</h1>
-        <p id="question">What is the capital of France?</p>
-        <button onclick="checkAnswer()">Show Answer</button>
-        <p id="answer" style="display:none; color: green; font-weight: bold;">Paris</p>
-    </div>
+
+    <!-- Sidebar with Subjects -->
+    <nav>
+        <div class="logo">Daily_Study_Quiz</div>
+        <button class="subject-btn active" onclick="loadSubject('General Knowledge')">General Knowledge</button>
+        <button class="subject-btn" onclick="loadSubject('Science')">Science</button>
+        <button class="subject-btn" onclick="loadSubject('Geography')">Geography</button>
+        <button class="subject-btn" onclick="loadSubject('History')">History</button>
+        <button class="subject-btn" onclick="loadSubject('English')">English Literature</button>
+        <button class="subject-btn" onclick="loadSubject('Computer Sc.')">Computer Science</button>
+    </nav>
+
+    <!-- Main Quiz Terminal -->
+    <main>
+        <div class="quiz-container">
+            <div class="status-bar">> MODULE_READY // SESSION: 001</div>
+            <h1 id="subject-title">General Knowledge</h1>
+            <p id="question-text">Select a subject from the sidebar to begin the neural scan.</p>
+            
+            <button class="action-btn" onclick="revealAnswer()">Execute Scan</button>
+            
+            <div id="answer-box">
+                > RESULT: <span id="answer-text">Answer hidden...</span>
+            </div>
+        </div>
+    </main>
 
     <script>
-        function checkAnswer() {
-            document.getElementById('answer').style.display = 'block';
+        const quizData = {
+            'General Knowledge': { q: "Which country is hosting the 2026 FIFA World Cup?", a: "USA, Canada, and Mexico" },
+            'Science': { q: "What is the powerhouse of the cell?", a: "Mitochondria" },
+            'Geography': { q: "Which is the largest desert in the world?", a: "Antarctica (Polar Desert)" },
+            'History': { q: "In which year did World War II end?", a: "1945" },
+            'English': { q: "Who wrote 'Romeo and Juliet'?", a: "William Shakespeare" },
+            'Computer Sc.': { q: "What does HTML stand for?", a: "HyperText Markup Language" }
+        };
+
+        function loadSubject(subj) {
+            // Update UI
+            document.getElementById('subject-title').innerText = subj;
+            document.getElementById('question-text').innerText = quizData[subj].q;
+            document.getElementById('answer-text').innerText = quizData[subj].a;
+            
+            // Reset answer visibility
+            document.getElementById('answer-box').style.display = 'none';
+            
+            // Update Active Button Styling
+            const buttons = document.querySelectorAll('.subject-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
+
+        function revealAnswer() {
+            document.getElementById('answer-box').style.display = 'block';
+        }
+
+        // Initialize with first subject
+        window.onload = () => loadSubject('General Knowledge');
     </script>
 </body>
 </html>
