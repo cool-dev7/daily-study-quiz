@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Daily Quiz</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Welcome to the Daily Quiz!</h1>
+        <p id="question">What is the capital of France?</p>
+        <button onclick="checkAnswer()">Show Answer</button>
+        <p id="answer" style="display:none; color: green; font-weight: bold;">Paris</p>
+    </div>
+
+    <script>
+        function checkAnswer() {
+            document.getElementById('answer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
